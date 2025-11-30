@@ -1,30 +1,34 @@
 import {
   alpha,
   Box,
-  Button,
   Container,
   Stack,
   Typography,
   useTheme,
   Slide,
 } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SwitchTransition } from "react-transition-group";
 import { UserName } from "./user-name";
 import { Step, type EStep } from "./types";
 import { Loading } from "./loading";
 import { ChooseMethod } from "./choose-method";
+import { authClient } from "lib/auth-client";
 export const SignIn = () => {
   const theme = useTheme();
   const [state, setState] = useState<EStep>(Step.UserName);
-  const handleClick = () => {
+  useEffect(() => {
+    authClient.getSession();
+  }, []);
+  const handleClick = async () => {
     if (state === Step.UserName) {
       setState(Step.Loading);
-      setTimeout(() => {
-        setState(Step.ChooseMethod);
-      }, 2000);
+      const result = await authClient.check.checknameemail({
+        query: { nameOrEmail: "vv" },
+      });
+      const exists = result.data?.exists ?? false;
+      setState(Step.SignUp);
     } else {
       setState(Step.Loading);
       setTimeout(() => {
@@ -108,6 +112,7 @@ export const SignIn = () => {
             unmountOnExit
             container={containerRef.current}
             key={0}
+            appear={false}
           >
             <Stack
               sx={{
@@ -127,4 +132,9 @@ export const SignIn = () => {
       </Container>
     </Box>
   );
+};
+
+type Res = {
+  data: { exists: boolean } | null;
+  err: any;
 };

@@ -18,6 +18,7 @@ export const SignInButton = (prop: SignInButtonProps) => {
       sx={{
         textTransform: "capitalize",
       }}
+      onClick={console.dir}
     >
       <span>Sign in with {prop.Label}</span>
     </Button>
