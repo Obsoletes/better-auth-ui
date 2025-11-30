@@ -1,4 +1,4 @@
-import { auth, SocialProviders } from "lib/auth";
+import { SocialProviders } from "lib/auth";
 import type { Route } from "./+types/signin";
 
 import { SignIn } from "~/sign-up";

@@ -1,6 +1,7 @@
 import {
   Button,
   Divider,
+  FormGroup,
   TextField,
   useTheme,
   type SxProps,
@@ -11,6 +12,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import MicrosoftIcon from "@mui/icons-material/Microsoft";
 import { SignInButton } from "./signIn-button";
+import { useState } from "react";
 
 const mergeSlotSx = (
   defaultSx: SxProps<Theme>,
@@ -63,35 +65,48 @@ const getCommonTextFieldProps = (
   },
 });
 type UserNameProps = {
-  onNext: () => void;
+  onNext: (v: string) => void;
 };
 export const UserName = (prop: UserNameProps) => {
   const theme = useTheme();
+  const [value, setValue] = useState("");
+  const onNext = (e: React.FormEvent) => {
+    prop.onNext(value);
+  };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      onNext(e);
+    }
+  };
   return (
     <>
       <TextField
         {...getCommonTextFieldProps(theme, {
-          label: "User name",
-          placeholder: "your@email.com",
+          placeholder: "Username or Email",
           id: "name",
           name: "name",
           type: "text",
-          autoComplete: "name",
+          autoComplete: "email",
           autoFocus: true,
+          margin: "normal",
+          value: value,
+          onChange: (e) => setValue(e.target.value),
         })}
+        onKeyDown={onKeyDown}
       />
       <Button
-        onClick={prop.onNext}
+        onClick={onNext}
         endIcon={<NavigateNextIcon />}
         loadingPosition="end"
         variant="outlined"
         fullWidth
+        type="submit"
       >
-        Next
+        Continue
       </Button>
       <Divider>or</Divider>
-      <SignInButton Label="passkey" Icon={<GitHubIcon />} />
-      <SignInButton Label="Github" Icon={<MicrosoftIcon />} />
+      <SignInButton Label="Github" Icon={<GitHubIcon />} />
+      <SignInButton Label="Microsoft" Icon={<MicrosoftIcon />} />
     </>
   );
 };

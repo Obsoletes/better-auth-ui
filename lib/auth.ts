@@ -1,6 +1,5 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "../generated/prisma/client";
 import {
   admin,
   apiKey,
@@ -8,18 +7,15 @@ import {
   twoFactor,
   username,
   jwt,
+  openAPI,
 } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-const connectionString = `${process.env.DATABASE_URL}`;
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+import { Prisma } from "./Prisma";
+import { checkNameOrEmail } from "./Plugin/checkNameOrEmail";
 
 export const auth = betterAuth({
   appName: "Blog",
-  database: prismaAdapter(prisma, {
+  database: prismaAdapter(Prisma, {
     provider: "postgresql",
   }),
   emailAndPassword: {
@@ -33,6 +29,8 @@ export const auth = betterAuth({
     apiKey(),
     bearer(),
     jwt(),
+    checkNameOrEmail(),
+    openAPI(),
   ],
   socialProviders: {
     github: {
