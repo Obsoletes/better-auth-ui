@@ -5,11 +5,10 @@ import {
   apiKey,
   bearer,
   twoFactor,
-  username,
   jwt,
   openAPI,
 } from "better-auth/plugins";
-import { passkey } from "better-auth/plugins/passkey";
+import { passkey } from "@better-auth/passkey";
 import { Prisma } from "./Prisma";
 import { checkNameOrEmail } from "./Plugin/checkNameOrEmail";
 
@@ -23,7 +22,6 @@ export const auth = betterAuth({
   },
   plugins: [
     twoFactor(),
-    username(),
     passkey(),
     admin(),
     apiKey(),

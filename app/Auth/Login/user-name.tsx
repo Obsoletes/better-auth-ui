@@ -104,7 +104,7 @@ export const UserName = (prop: UserNameProps) => {
       >
         Continue
       </Button>
-      <Divider>or</Divider>
+      <Divider sx={{ width: "100%" }}>or</Divider>
       <SignInButton Label="Github" Icon={<GitHubIcon />} />
       <SignInButton Label="Microsoft" Icon={<MicrosoftIcon />} />
     </>
