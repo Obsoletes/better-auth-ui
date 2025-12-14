@@ -14,6 +14,7 @@ export const SignInButton = (prop: SignInButtonProps) => {
       size="large"
       disableElevation
       name="sign-in"
+      type="button"
       startIcon={prop.Icon}
       sx={{
         textTransform: "capitalize",

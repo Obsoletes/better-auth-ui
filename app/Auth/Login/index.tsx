@@ -8,27 +8,35 @@ import {
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { SwitchTransition } from "react-transition-group";
+import { useNavigate } from "react-router";
 import { UserName } from "./user-name";
 import { Step, type EStep } from "./types";
-import { Loading } from "./loading";
 import { ChooseMethod } from "./choose-method";
 import { authClient } from "lib/auth-client";
+import { Loading } from "../Share/loading";
 export const Login = () => {
   const theme = useTheme();
   const [state, setState] = useState<EStep>(Step.UserName);
-  const handleClick = async () => {
-    if (state === Step.UserName) {
-      setState(Step.Loading);
+  const navigate = useNavigate();
+  const handleClick = async (value: string) => {
+    if (state !== Step.UserName) {
+      setState(Step.UserName);
+      return;
+    }
+    setState(Step.Loading);
+    try {
       const result = await authClient.check.checknameemail({
-        query: { nameOrEmail: "vv" },
+        query: { nameOrEmail: value },
       });
       const exists = result.data?.exists ?? false;
-      setState(Step.SignUp);
-    } else {
-      setState(Step.Loading);
-      setTimeout(() => {
-        setState(Step.UserName);
-      }, 2000);
+      if (exists) {
+        setState(Step.ChooseMethod);
+      } else {
+        const search = value ? `?email=${encodeURIComponent(value)}` : "";
+        navigate(`/register${search}`);
+      }
+    } catch (error) {
+      setState(Step.UserName);
     }
   };
   const containerRef = useRef(null);
@@ -101,6 +109,8 @@ export const Login = () => {
           appear={false}
         >
           <Stack
+            component="form"
+            onSubmit={() => handleClick("")}
             sx={{
               display: "flex",
               flexDirection: "column",

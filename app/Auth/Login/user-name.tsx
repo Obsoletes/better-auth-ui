@@ -82,7 +82,7 @@ export const UserName = (prop: UserNameProps) => {
     <>
       <TextField
         {...getCommonTextFieldProps(theme, {
-          placeholder: "Username or Email",
+          placeholder: "email@example.com",
           id: "name",
           name: "name",
           type: "text",
@@ -90,10 +90,12 @@ export const UserName = (prop: UserNameProps) => {
           autoFocus: true,
           margin: "normal",
           value: value,
+          label: "Email",
           onChange: (e) => setValue(e.target.value),
         })}
         onKeyDown={onKeyDown}
       />
+
       <Button
         onClick={onNext}
         endIcon={<NavigateNextIcon />}
